@@ -1,0 +1,14 @@
+.t-image-block-a {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.t-image-block-b {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.t-image-block-c {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}

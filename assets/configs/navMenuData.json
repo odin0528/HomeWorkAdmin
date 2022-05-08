@@ -1,0 +1,64 @@
+[
+  {
+    "title": "order_management",
+    "icon": "file-text",
+    "tag": "0",
+    "tagVariant": "light-danger",
+    "route": "/orders"
+  },
+  {
+    "title": "shipping_management",
+    "icon": "truck",
+    "route": "/shipping"
+  },
+  {
+    "title": "stock_report",
+    "icon": "box-seam",
+    "route": "/report/stock"
+  },
+  {
+    "title": "page_management",
+    "icon": "grid1x2-fill",
+    "route": "/pages"
+  },
+  {
+    "title": "category_management",
+    "icon": "folder2",
+    "route": "/category"
+  },
+  {
+    "title": "product_management",
+    "icon": "upc-scan",
+    "route": "/products"
+  },
+  {
+    "title": "member_management",
+    "icon": "people",
+    "route": "/members"
+  },
+  {
+    "title": "promotion_management",
+    "icon": "gem",
+    "route": "/promotions"
+  },
+  {
+    "title": "menu_management",
+    "icon": "menu-button",
+    "route": "/menus"
+  },
+  {
+    "title": "payment_management",
+    "icon": "credit-card",
+    "route": "/payment"
+  },
+  {
+    "title": "logistics_management",
+    "icon": "minecart",
+    "route": "/logistics"
+  },
+  {
+    "title": "platform_management",
+    "icon": "shop",
+    "route": "/platform"
+  }
+]

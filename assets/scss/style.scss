@@ -1,0 +1,18 @@
+/*================================================================================
+
+NOTE:
+------
+PLACE HERE YOUR OWN SCSS CODES AND IF NEEDED, OVERRIDE THE STYLES FROM THE OTHER STYLESHEETS.
+WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BETTER LIKE THIS.  */
+
+hr {
+  width: 97%;
+}
+
+.v-select {
+  padding: 0px 0.5rem;
+}
+
+.vs--single.vs--open .vs__selected {
+  position: relative !important;
+}

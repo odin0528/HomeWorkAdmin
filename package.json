@@ -1,0 +1,45 @@
+{
+  "name": "GiantZongziECAdmin",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate",
+    "lint:js": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
+    "lint": "yarn lint:js"
+  },
+  "dependencies": {
+    "@nuxtjs/axios": "^5.13.6",
+    "@nuxtjs/moment": "^1.6.1",
+    "bootstrap": "4.5.3",
+    "bootstrap-vue": "^2.21.2",
+    "cookie-universal-nuxt": "^2.1.5",
+    "core-js": "^3.15.1",
+    "nuxt": "^2.15.7",
+    "nuxt-i18n": "^6.27.3",
+    "printf": "^0.6.1",
+    "sass": "~1.32",
+    "vee-validate": "^3.4.11",
+    "vue-ctk-date-time-picker": "^2.5.0",
+    "vue-feather-icons": "^5.1.0",
+    "vue-perfect-scrollbar": "^0.2.1",
+    "vue-ripple-directive": "^2.0.1",
+    "vue-select": "^3.12.2",
+    "vue-the-mask": "^0.11.1",
+    "vuedraggable": "^2.24.3"
+  },
+  "devDependencies": {
+    "@babel/eslint-parser": "^7.14.7",
+    "@nuxtjs/eslint-config": "^6.0.1",
+    "@nuxtjs/eslint-module": "^3.0.2",
+    "deepmerge": "^4.2.2",
+    "eslint": "^7.29.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-nuxt": "^2.0.0",
+    "eslint-plugin-vue": "^7.12.1",
+    "prettier": "^2.3.2",
+    "sass-loader": "10.2.0"
+  }
+}
