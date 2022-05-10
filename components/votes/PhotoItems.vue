@@ -4,17 +4,16 @@
       class="product_photo_uploader cousor-pointer"
       :style="{ backgroundImage: `url(${photo})` }"
     >
-      <div
-        v-if="!photo"
-        class="pickup_photo"
-        @click="$refs.productPhoto.click()"
-      >
-        <b-icon icon="plus-square" size="24" />
+      <div v-if="id===0" class="toolbar">
+        <span class="ml-2" @click="$refs.productPhoto.click()">
+          <b-icon icon="cloud-upload" scale="1" />
+        </span>
+        <span class="mr-2" @click="deletePhoto">
+          <b-icon icon="x" scale="1.5" />
+        </span>
       </div>
-      <div v-else class="toolbar">
-        <span class="ml-2" @click="deletePhoto"
-          ><b-icon icon="x" scale="1.5"
-        /></span>
+      <div v-if="!photo" class="pickup_photo"  @click="$refs.productPhoto.click()">
+        上傳候選人照片
       </div>
       <input
         ref="productPhoto"
@@ -35,7 +34,7 @@
             :placeholder="$t('candidate_title_placeholder')"
             :state="getValidationState(validationContext)"
             class="candidate-title"
-            @input="$emit('updatePhotoTitle', index, id, title)"
+            @input="$emit('updatePhotoTitle', index, id, $event)"
           />
         </b-input-group>
         <b-form-invalid-feedback
@@ -91,6 +90,7 @@ export default {
   },
   created() {
     localize('zhTw', zhTw)
+    this.$validator = this.$parent.$validator
   },
   methods: {
     inputImageRenderer() {
@@ -107,7 +107,7 @@ export default {
       }
     },
     deletePhoto() {
-      this.$emit('pickupPhoto', this.index, this.id, '')
+      this.$emit('deletePhoto', this.index)
     }
   }
 }
@@ -135,7 +135,7 @@ export default {
 
   .pickup_photo {
     width: 100%;
-    height: 100%;
+    height: 90px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -146,6 +146,8 @@ export default {
     opacity: 0.5;
     width: 100%;
     border-radius: 10px 10px 0 0;
+    justify-content: space-between;
+    display: flex;
 
     svg {
       color: #fff;

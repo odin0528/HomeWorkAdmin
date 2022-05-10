@@ -178,7 +178,7 @@ export default {
             })
             .then((res) => {
               this.loading = false
-              if (res.code === this.$config.returnCode.success) {
+              if (res.code === this.$returnCode.success) {
                 this.$toast(this.$t('reset_password_success'))
                 this.$router.push(`/`)
               } else {

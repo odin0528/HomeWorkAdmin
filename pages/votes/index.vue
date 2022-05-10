@@ -24,7 +24,7 @@
           <b-col cols="12" md="6">
             <div class="d-flex align-items-center justify-content-end">
               <b-button variant="primary" to="/votes/edit">
-                <span class="text-nowrap">{{ $t('create_product') }}</span>
+                <span class="text-nowrap">{{ $t('vote_create') }}</span>
               </b-button>
             </div>
           </b-col>
@@ -33,102 +33,55 @@
 
       <b-container fluid>
         <b-row class="product_list_header">
+          <b-col cols="2">{{ $t('status') }}</b-col>
           <b-col cols="4">{{ $t('vote_title') }}</b-col>
-          <b-col cols="6">
-            <b-container>
-              <b-row>
-                <b-col cols="6">{{ $t('product_style') }}</b-col>
-                <b-col cols="2">{{ $t('price') }}</b-col>
-                <b-col cols="2">庫存</b-col>
-                <b-col cols="2">不可超賣</b-col>
-              </b-row>
-            </b-container>
-          </b-col>
+          <b-col cols="2">{{ $t('vote_start_time') }}</b-col>
+          <b-col cols="2">{{ $t('vote_end_time') }}</b-col>
           <b-col cols="2">{{ $t('action') }}</b-col>
         </b-row>
         <b-row
-          v-for="(product, index) in productList"
-          :key="product.id"
+          v-for="(vote) in voteList"
+          :key="vote.id"
           class="product_list_body py-0"
         >
+          <b-col cols="2">
+            <b-badge
+              :variant="voteStatusVariant(vote.status)"
+              class="col-12"
+              style="line-height: 30px"
+            >
+              {{ $t(`vote_status_${vote.status}`) }}
+            </b-badge>
+          </b-col>
           <b-col cols="4" class="text-left">
-            <div
-              class="photo"
-              :style="{
-                backgroundImage: `url(${
-                  product.photos && product.photos.length > 0
-                    ? product.photos[0].photo
-                    : '/images/no-image.jpg'
-                })`
-              }"
-            ></div>
-            <b-link :to="`/products/edit/${product.id}`">
-              {{ product.title }}
+            <b-link :to="`/votes/${vote.id}`">
+              {{ vote.title }}
             </b-link>
           </b-col>
-          <b-col cols="6">
-            <b-container
-              class="product_style_list"
-              :class="{ show: showMoreSwitch[index] }"
-            >
-              <template v-for="style in product.style_table">
-                <b-row v-for="item in style" :key="item.id">
-                  <b-col cols="6"
-                    >{{ item.style_title }}
-
-                    <span v-if="item.sub_style_title">
-                      - {{ item.sub_style_title }}</span
-                    >
-                  </b-col>
-                  <b-col cols="2">NT$ {{ item.price }}</b-col>
-                  <b-col cols="2">{{ item.qty }}</b-col>
-                  <b-col cols="2">{{
-                    item.no_over_sale ? '不可' : '可'
-                  }}</b-col>
-                </b-row>
-              </template>
-            </b-container>
-            <b-row
-              v-if="
-                product.style_table.length * product.style_table[0].length > 3
-              "
-              class="
-                show-more-style
-                justify-content-center
-                position-relative
-                mt-2
-              "
-            >
-              <b-button
-                variant="flat-secondary"
-                @click="showMoreSwitch.splice(index, 1, !showMoreSwitch[index])"
-              >
-                {{ !showMoreSwitch[index] ? $t('show_more') : $t('hidden') }}
-              </b-button>
-            </b-row>
-          </b-col>
+          <b-col cols="2">{{ $moment.unix(vote.start_time).format('yy-MM-DD hh:mm') }}</b-col>
+          <b-col cols="2">{{ $moment.unix(vote.start_time).format('yy-MM-DD hh:mm') }}</b-col>
           <b-col cols="2">
-            <b-form-checkbox
-              name="check-button"
-              :checked="product.is_public"
-              class="pt-2 ml-5"
-              switch
-              @change="togglePubliced(product.id, $event)"
-            >
-              <b>{{
-                product.is_public ? $t('published') : $t('unpublished')
-              }}</b>
-            </b-form-checkbox>
             <b-dropdown
               v-ripple.400="'rgba(186, 191, 199, 0.15)'"
               :text="$t('more_action')"
               variant="flat-secondary"
             >
               <b-dropdown-item
-                v-b-modal.delete-confrim
-                @click=";(modifyID = product.id), (modifyTitle = product.title)"
+                :to="`/votes/edit/${vote.id}`"
               >
-                {{ $t('delete') }}
+                {{ $t('edit') }}
+              </b-dropdown-item>
+              <b-dropdown-item
+                v-if="vote.status === 0"
+                @click="changeVoteStatus(vote.id, 1)"
+              >
+                {{ $t('vote_start') }}
+              </b-dropdown-item>
+              <b-dropdown-item
+                v-if="vote.status === 1"
+                @click="changeVoteStatus(vote.id, 2)"
+              >
+                {{ $t('vote_finish') }}
               </b-dropdown-item>
             </b-dropdown>
           </b-col>
@@ -188,18 +141,6 @@
         </b-row>
       </div>
     </b-card>
-    <b-modal
-      id="delete-confrim"
-      header-bg-variant="primary"
-      header-class="text-white"
-      title="確認刪除產品"
-      @ok="productDelete"
-    >
-      <p class="my-4">
-        您確定要刪除『<span style="color: red">{{ modifyTitle }}</span
-        >』嗎？
-      </p>
-    </b-modal>
   </div>
 </template>
 
@@ -207,7 +148,7 @@
 import Ripple from 'vue-ripple-directive'
 import vSelect from 'vue-select'
 export default {
-  name: 'ProductList',
+  name: 'voteList',
   components: {
     vSelect
   },
@@ -225,20 +166,12 @@ export default {
       modifyTitle: '',
       isLoading: false,
       searchQuery: '',
-      productList: [],
+      voteList: [],
       showMoreSwitch: new Array(10),
       totalRows: 0,
       page: 1,
       items: 10,
       perPageOptions: [10, 20, 30, 50],
-      tableColumns: [
-        { key: 'title', label: '商品名稱' },
-        { key: 'styleTitle', label: '規格' },
-        { key: 'price', label: this.$t('price') },
-        { key: 'qty', label: this.$t('qty') },
-        { key: 'sku', label: this.$t('sku') },
-        { key: 'actions' }
-      ]
     }
   },
   computed: {
@@ -248,7 +181,7 @@ export default {
       },
       set(value) {
         this.page = value
-        this.productFetch()
+        this.voteFetch()
       }
     },
     perPage: {
@@ -258,15 +191,15 @@ export default {
       set(value) {
         this.items = value
         this.showMoreSwitch = new Array(value)
-        this.productFetch()
+        this.voteFetch()
       }
     }
   },
   mounted() {
-    this.productFetch()
+    this.voteFetch()
   },
   methods: {
-    productFetch() {
+    voteFetch() {
       this.$axios
         .$post('/api/votes', {
           page: this.currentPage,
@@ -274,27 +207,30 @@ export default {
           ...this.filter
         })
         .then((res) => {
-          this.productList = res.data
-          this.totalRows = res.pager.total
+          this.voteList = res.data.data
+          this.totalRows = res.data.total
         })
     },
-    togglePubliced(id, event) {
-      this.$axios.$post('/api/products/public', {
+    changeVoteStatus(id, status) {
+      this.$axios.$post('/api/votes/status', {
         id,
-        is_public: event
+        status
+      }).then((res)=>{
+        if(res.code === 200){
+          this.voteFetch()
+        }
       })
     },
-    productDelete() {
-      this.$store.commit('loadingStart')
-      this.$axios
-        .$post('/api/products/delete', {
-          id: this.modifyID
-        })
-        .then((res) => {
-          this.productFetch()
-          this.$store.commit('loadingFinish')
-        })
-    }
+    voteStatusVariant(status) {
+      switch (status) {
+        case 0:
+          return 'secondary'
+        case 2:
+          return 'danger'
+        case 1:
+          return 'success'
+      }
+    },
   }
 }
 </script>

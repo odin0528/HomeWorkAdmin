@@ -4,7 +4,7 @@
       {{ $t('vote_photo') }}
     </b-col>
     <div class="col-10 pl-3 products-photo-list">
-      <votes-photo-items
+      <photo-items
         v-for="(photo, key) in photos"
         :id="photo.id"
         :key="key"
@@ -13,16 +13,18 @@
         :title="photo.title"
         @pickupPhoto="pickupPhoto"
         @updatePhotoTitle="updatePhotoTitle"
+        @deletePhoto="deletePhoto"
       />
       <div>
         <div
           class="product_photo_uploader cousor-pointer"
         >
           <div
-            class="pickup_photo"
+            class="add-candidate"
             @click="$store.commit('votes/addCandidate')"
           >
-            增加候選人
+            <div><b-icon icon="plus-square" scale="3" /></div>
+            <div class="mt-4">增加候選人</div>
           </div>
         </div>
       </div>
@@ -31,13 +33,21 @@
 </template>
 
 <script>
+import { withValidation } from 'vee-validate'
+import PhotoItems from '~/components/votes/PhotoItems'
 export default {
+  components: {
+    PhotoItems: withValidation(PhotoItems)
+  },
   computed: {
     photos: {
       get() {
         return this.$store.state.votes.photos
       },
     },
+  },
+  created() {
+    this.$validator = this.$parent.$validator
   },
   methods: {
     pickupPhoto(index, id, photo) {
@@ -54,6 +64,19 @@ export default {
         title,
       })
     },
+    deletePhoto(index){
+      this.$store.commit('votes/deletePhoto',  index)
+    }
   },
 }
 </script>
+<style lang="scss">
+.add-candidate{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+</style>

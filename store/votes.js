@@ -1,9 +1,7 @@
 export const state = () => ({
   title: '',
   description: '',
-  photos: [
-    { id: 0, photo: '', title: '' },
-  ],
+  photos: [],
 })
 
 export const mutations = {
@@ -18,7 +16,10 @@ export const mutations = {
     state.photos[obj.index].photo = obj.photo
   },
   updatePhotoTitle(state, obj) {
-    state.photos[obj.index].title = obj.id
+    state.photos[obj.index].title = obj.title
+  },
+  deletePhoto(state, index){
+    state.photos.splice(index, 1)
   },
   addCandidate(state){
     state.photos.push({ id: 0, photo: '' });
@@ -26,9 +27,7 @@ export const mutations = {
   reset(state) {
     state.title = ''
     state.description = ''
-    state.photos = [
-      { id: 0, photo: '' },
-    ]
+    state.photos = []
   }
 }
 

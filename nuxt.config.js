@@ -26,8 +26,8 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    '~/plugins/config.js',
     '~/plugins/toast.js',
+    '~/plugins/returnCode.js',
     '~/plugins/axios.js',
     '~/plugins/utils.js'
   ],
@@ -83,6 +83,10 @@ export default {
       target: process.env.API_PATH || 'http://api.homework.com/api/admin',
       pathRewrite: { '^/api': '' }
     }
+  },
+
+  publicRuntimeConfig: {
+    imageUrl: 'http://api.homework.com/',
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build

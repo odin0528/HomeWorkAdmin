@@ -162,26 +162,29 @@ export default {
     login() {
       this.$refs.loginForm.validate().then((success) => {
         this.loading = true
-        this.$axios
-          .$post('/api/login', {
-            account: this.account,
-            password: this.password,
-          })
-          .then((res) => {
-            this.loading = false
-            if (this.remember) {
-              this.$cookies.set('account', this.account)
-            } else {
-              this.$cookies.remove('account')
-            }
+        try{
+          this.$axios
+            .$post('/api/login', {
+              account: this.account,
+              password: this.password,
+            })
+            .then((res) => {
+              if (this.remember) {
+                this.$cookies.set('account', this.account)
+              } else {
+                this.$cookies.remove('account')
+              }
 
-            if (res.code === this.$config.returnCode.success) {
-              this.$cookies.set('gz_admin', res.data.token)
-              this.$router.push(`/`)
-            } else {
-              this.$toast(this.$t(res.data), 'danger')
-            }
-          })
+              if (res.code === this.$returnCode.success) {
+                this.$cookies.set('gz_admin', res.data.token)
+                this.$router.push(`/`)
+              } else {
+                this.$toast(this.$t(res.data), 'danger')
+              }
+            })
+        } finally{
+          this.loading = false
+        }
       })
     },
   },
